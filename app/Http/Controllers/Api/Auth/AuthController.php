@@ -19,6 +19,12 @@ class AuthController extends Controller
         $this->model = $user;
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param AuthUser $request
+     * @return \App\Http\Resources\UserResource
+     */
     public function auth(AuthUser $request)
     {
         $user = $this->model->where('email', $request->email)->firstOrFail();
@@ -33,5 +39,34 @@ class AuthController extends Controller
                     ->additional([
                         'token' => $user->createToken($request->device_name)->plainTextToken,
                     ]);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function logout(Request $request)
+    {
+        $request->user()->tokens()->delete();
+
+        return response()->json([
+            'logout' => 'success'
+        ]);
+    }
+
+
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @return \App\Http\Resources\UserResource
+     */
+    public function me(Request $request)
+    {
+        $user = $request->user();
+
+        return new UserResource($user);
     }
 }
