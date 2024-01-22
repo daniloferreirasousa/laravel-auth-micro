@@ -1,1 +1,1 @@
-# Laravel Autentication & Autorization with Sanctum
+# Laravel - Autentication & Autorization with Sanctum

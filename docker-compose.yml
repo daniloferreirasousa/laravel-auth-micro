@@ -45,12 +45,6 @@ services:
         networks:
             - microauth
 
-    # redis
-    redis:
-        image: redis:latest
-        networks:
-            - microauth
-
     # queue
     queue:
         image: especializati/laravel9-app
@@ -63,6 +57,13 @@ services:
             - micro_auth
         networks:
             - microauth
+
+    # redis
+    redis:
+        image: redis:latest
+        networks:
+            - microauth
+
 
 networks:
     microauth:

@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.1-fpm
 
 # set your user name, ex: user=bernardo
 ARG user
@@ -13,6 +13,11 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     zip \
     unzip
+    # libpq-dev
+
+# RUN apt-get install -y npm
+
+# RUN npm install -g sass
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
