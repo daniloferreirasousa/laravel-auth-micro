@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ResourceController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Auth\RegisterController;
+use App\Http\Controllers\Api\PermissionUserController;
 
 
 /**
@@ -17,6 +18,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 Route::get('/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
 
 Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/users/permissions', [PermissionUserController::class, 'permissionUser']);
+
     Route::get('/resources', [ResourceController::class, 'index']);
 
     Route::apiResource('/users', UserController::class);
