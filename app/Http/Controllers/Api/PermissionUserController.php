@@ -15,6 +15,8 @@ class PermissionUserController extends Controller
     public function __construct(User $user)
     {
         $this->user = $user;
+
+        $this->middleware('can:users');
     }
 
     public function permissionUser(string $identify)
@@ -41,7 +43,7 @@ class PermissionUserController extends Controller
     {
         $user = $request->user();
 
-        if (!$user->hasPermission($permission)) {
+        if (!$user->isSuperAdmin() && !$user->hasPermission($permission)) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
