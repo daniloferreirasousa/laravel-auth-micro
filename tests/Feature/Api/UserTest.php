@@ -4,6 +4,7 @@ namespace Tests\Feature\Api;
 
 use Tests\TestCase;
 use App\Models\User;
+use App\Models\Permission;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -28,6 +29,22 @@ class UserTest extends TestCase
                         ->getJson('/users');
 
         $response->assertStatus(403);
+    }
+
+    public function test_get_users()
+    {
+        $permission = Permission::factory()->create([
+            'name' => 'users'
+        ]);
+
+        $user = User::factory()->create();
+        $token = $user->createToken('test')->plainTextToken;
+
+        $user->permissions()->attach($permission);
+
+        $response = $this->withHeaders(['Authorization' => "Bearer {$token}"])->getJson('/users');
+
+        $response->assertStatus(200);
     }
 
 }
