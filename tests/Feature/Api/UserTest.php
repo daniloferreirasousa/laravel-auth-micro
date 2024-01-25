@@ -47,4 +47,24 @@ class UserTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function test_count_users()
+    {
+        $permission = Permission::factory()->create([
+            'name' => 'users'
+        ]);
+
+        $users = User::factory()->count(10)->create();
+
+        $user = User::first();
+
+        $token = $user->createToken('test')->plainTextToken;
+
+        $user->permissions()->attach($permission);
+
+        $response = $this->withHeaders(['Authorization' => "Bearer {$token}"])->getJson('/users');
+
+        $response->assertJsonCount(10, 'data');
+        $response->assertStatus(200);
+    }
+
 }
