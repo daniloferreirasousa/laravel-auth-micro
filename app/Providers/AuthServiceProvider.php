@@ -22,18 +22,22 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        /**
+         * Esse Gate é acionado antes dos outros Gates, se o retorno dele for TRUE
+         * são ignorados os Gates posteriores.
+         */
+        Gate::before(function ($user) {
+            if($user->isSuperAdmin()) {
+                return true;
+            }
+        });
+
         Gate::define('users', function ($user) {
             return $user->hasPermission('users');
         });
 
         Gate::define('add_permissions_user', function () {
             return $user->hasPermission('add_permissions_user');
-        });
-
-        Gate::before(function ($user) {
-            if($user->isSuperAdmin()) {
-                return true;
-            }
         });
     }
 }

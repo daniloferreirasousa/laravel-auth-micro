@@ -27,6 +27,10 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        /**
+         * Este Observe verifica os Eventos que são acionados pela Class User,
+         * é possível adicionar eventos diversos para cada ação do usuário.
+         */
         User::observe(UserObserve::class);
     }
 
