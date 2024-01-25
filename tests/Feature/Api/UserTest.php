@@ -9,17 +9,25 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UserTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     */
-    public function test_get_all_users(): void
+    public function test_get_users_unauthenticated()
     {
-        $users = User::factory()->count(10)->create();
+       $response = $this->getJson('/users');
 
-        $response = $this->getJson('/users');
-
-        $response->assertJsonCount(10, 'data');
-
-        $response->assertStatus(200);
+       $response->assertStatus(401);
     }
+
+    public function test_get_users_unauthorized()
+    {
+        $user = User::factory()->create();
+        $token = $user->createToken('test')->plainTextToken;
+
+        $response = $this
+                        ->withHeaders([
+                            'Authorization' => "Bearer {$token}"
+                        ])
+                        ->getJson('/users');
+
+        $response->assertStatus(403);
+    }
+
 }
