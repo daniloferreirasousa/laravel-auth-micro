@@ -50,7 +50,8 @@ class UserController extends Controller
     {
         $user = $this->model
                     ->with('permissions')
-                    ->where('uuid', $identify->firstOrFail());
+                    ->where('uuid', $identify)
+                    ->firstOrFail();
 
         return new UserResource($user);
     }
