@@ -142,4 +142,70 @@ class UserTest extends TestCase
     }
 
 
+    public function test_validations_404_update_user()
+    {
+        $permission = Permission::factory()->create([
+            'name' => 'users'
+        ]);
+
+        $user = User::factory()->create();
+        $token = $user->createToken('test')->plainTextToken;
+
+        $user->permissions()->attach($permission);
+
+        $response = $this
+                        ->withHeaders([
+                            'Authorization' => "Bearer {$token}"
+                        ])
+                        ->putJson('/users/fake_value', [
+                            'name' => 'Danilo de Andrade',
+                            'email' => 'danilo@andrade.com'
+                        ]);
+
+        $response->assertStatus(404);
+    }
+
+    public function test_validations_update_user()
+    {
+        $permission = Permission::factory()->create([
+            'name' => 'users'
+        ]);
+
+        $user = User::factory()->create();
+        $token = $user->createToken('test')->plainTextToken;
+
+        $user->permissions()->attach($permission);
+
+        $response = $this
+                        ->withHeaders([
+                            'Authorization' => "Bearer {$token}"
+                        ])
+                        ->putJson("/users/{$user->uuid}", []);
+
+        $response->assertStatus(422);
+    }
+
+    public function test_update_user()
+    {
+        $permission = Permission::factory()->create([
+            'name' => 'users'
+        ]);
+
+        $user = User::factory()->create();
+        $token = $user->createToken('test')->plainTextToken;
+
+        $user->permissions()->attach($permission);
+
+        $response = $this
+                        ->withHeaders([
+                            'Authorization' => "Bearer {$token}"
+                        ])
+                        ->putJson("/users/{$user->uuid}", [
+                            'name' => 'Danilo de Andrade',
+                            'email' => 'danilo@support.com',
+                        ]);
+
+        $response->assertStatus(200);
+    }
+
 }
