@@ -208,4 +208,44 @@ class UserTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function test_validation_404_delete_user()
+    {
+        $permission = Permission::factory()->create([
+            'name' => 'users'
+        ]);
+
+        $user = User::factory()->create();
+        $token = $user->createToken('test')->plainTextToken;
+
+        $user->permissions()->attach($permission);
+
+        $response = $this
+                        ->withHeaders([
+                            'Authorization' => "Bearer {$token}"
+                        ])
+                        ->deleteJson("/users/fake_value");
+
+        $response->assertStatus(404);
+    }
+
+    public function test_delete_user()
+    {
+        $permission = Permission::factory()->create([
+            'name' => 'users'
+        ]);
+
+        $user = User::factory()->create();
+        $token = $user->createToken('test')->plainTextToken;
+
+        $user->permissions()->attach($permission);
+
+        $response = $this
+                        ->withHeaders([
+                            'Authorization' => "Bearer {$token}"
+                        ])
+                        ->deleteJson("/users/{$user->uuid}");
+
+        $response->assertStatus(204);
+    }
+
 }
