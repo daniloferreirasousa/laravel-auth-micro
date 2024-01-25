@@ -31,6 +31,10 @@ class PermissionUserController extends Controller
 
     public function addPermissionUser(AddPermissionsUser $request)
     {
+        if (Gate::denies('add_permission_user')) {
+            abort(403, 'Não autorizado');
+        }
+
         $user = $this->user->where('uuid', $request->user)->firstOrFail();
 
         $user->permissions()->attach($request->permissions);
@@ -48,5 +52,15 @@ class PermissionUserController extends Controller
         }
 
         return response()->json(['message' => 'Authorized']);
+    }
+
+    public function removePermissionUser(Request $request)
+    {
+        $user = $this->user->where('uuid', $request->user)->firstOrFail();
+
+        if ($request->permission)
+            $user->permissions()->detach($request->permission);
+
+        return response()->json(['message' => 'Sucesso']);
     }
 }
