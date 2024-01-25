@@ -21,7 +21,7 @@ class StoreUpdateUser extends FormRequest
      */
     public function rules(): array
     {
-        $uuid = $thi->uuid;
+        $uuid = $this->uuid;
 
         $rules = [
             'name' => ['required', 'min:3', 'max:255'],
@@ -32,7 +32,7 @@ class StoreUpdateUser extends FormRequest
         if($this->method == 'PUT') {
             $rules['password'] = ['nullable', 'min:4', 'max:16'];
         }
-        
+
         return $rules;
     }
 }
